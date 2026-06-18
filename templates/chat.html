@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Glydn AI — Sohbet</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='global.css') }}"/>
+  <link rel="stylesheet" href="{{ url_for('static', filename='chat.css') }}"/>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+</head>
+<body class="chat-body">
+
+<!-- SIDEBAR -->
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-top">
+    <div class="sidebar-logo">
+      <svg width="28" height="28" viewBox="0 0 48 48" fill="none">
+        <polygon points="24,4 44,14 44,34 24,44 4,34 4,14" stroke="url(#sg)" stroke-width="2" fill="none"/>
+        <circle cx="24" cy="24" r="5" fill="url(#sg)"/>
+        <defs>
+          <linearGradient id="sg" x1="0" y1="0" x2="48" y2="48">
+            <stop offset="0%" stop-color="#00ff88"/>
+            <stop offset="100%" stop-color="#00ccff"/>
+          </linearGradient>
+        </defs>
+      </svg>
+      <span>GLYDN <b>AI</b></span>
+    </div>
+    <button class="new-chat-btn" id="newChatBtn">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+        <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+      </svg>
+      Yeni Sohbet
+    </button>
+  </div>
+
+  <div class="sidebar-section-label">Sohbetler</div>
+  <div class="chat-list" id="chatList"></div>
+
+  <div class="sidebar-bottom">
+    <button class="delete-all-btn" id="deleteAllBtn">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/>
+      </svg>
+      Tümünü Sil
+    </button>
+    <button class="settings-btn" id="settingsBtn">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+      </svg>
+      Özelleştir
+    </button>
+  </div>
+</aside>
+
+<!-- SIDEBAR TOGGLE (mobile) -->
+<button class="sidebar-toggle" id="sidebarToggle">
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/>
+  </svg>
+</button>
+
+<!-- SIDEBAR OVERLAY (mobile karartma) -->
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+<!-- MAIN CHAT AREA -->
+<main class="chat-main" id="chatMain">
+  <div class="chat-header">
+    <div class="chat-header-title" id="chatHeaderTitle">Yeni Sohbet</div>
+    <div class="chat-header-actions">
+      <button class="header-btn" title="Bu sohbeti sil" id="deleteCurrent">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M9 6V4h6v2"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <div class="messages-container" id="messagesContainer">
+    <div class="welcome-screen" id="welcomeScreen">
+      <div class="welcome-logo">
+        <svg width="64" height="64" viewBox="0 0 48 48" fill="none">
+          <polygon points="24,4 44,14 44,34 24,44 4,34 4,14" stroke="url(#wg)" stroke-width="2" fill="none"/>
+          <polygon points="24,10 38,17 38,31 24,38 10,31 10,17" stroke="url(#wg)" stroke-width="1" fill="none" opacity="0.4"/>
+          <circle cx="24" cy="24" r="6" fill="url(#wg)"/>
+          <defs>
+            <linearGradient id="wg" x1="0" y1="0" x2="48" y2="48">
+              <stop offset="0%" stop-color="#00ff88"/>
+              <stop offset="100%" stop-color="#00ccff"/>
+            </linearGradient>
+          </defs>
+        </svg>
+      </div>
+      <h2 class="welcome-title">Glydn AI'ya Hoş Geldiniz</h2>
+      <p class="welcome-sub">Size nasıl yardımcı olabilirim?</p>
+      <div class="suggestion-grid" id="suggestionGrid"></div>
+    </div>
+    <div class="messages-list" id="messagesList"></div>
+  </div>
+
+  <div class="input-area">
+    <div class="input-wrapper">
+      <textarea
+        id="messageInput"
+        class="message-input"
+        placeholder="Mesajınızı yazın... (Enter göndermek, Shift+Enter yeni satır)"
+        rows="1"
+      ></textarea>
+      <button class="send-btn" id="sendBtn">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <line x1="22" y1="2" x2="11" y2="13"/>
+          <polygon points="22 2 15 22 11 13 2 9 22 2"/>
+        </svg>
+      </button>
+    </div>
+    <div class="input-hint">Glydn AI hatalar yapabilir. Yanıtlarınızı kontrol edin.</div>
+  </div>
+</main>
+
+<!-- SETTINGS MODAL -->
+<div class="modal-overlay" id="settingsModal">
+  <div class="modal">
+    <div class="modal-header">
+      <h3>Özelleştirme</h3>
+      <button class="modal-close" id="modalClose">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="setting-group">
+        <label>Tema</label>
+        <div class="theme-options">
+          <div class="theme-opt active" data-theme="dark" style="--c:#00ff88">🌑 Karanlık</div>
+          <div class="theme-opt" data-theme="darker" style="--c:#00ccff">⚫ Derin Karanlık</div>
+          <div class="theme-opt" data-theme="forest" style="--c:#39ff14">🌿 Orman</div>
+          <div class="theme-opt" data-theme="ocean" style="--c:#00e5ff">🌊 Okyanus</div>
+        </div>
+      </div>
+      <div class="setting-group">
+        <label>Vurgu Rengi</label>
+        <div class="accent-options">
+          <div class="accent-opt active" data-color="#00ff88" style="background:#00ff88"></div>
+          <div class="accent-opt" data-color="#00ccff" style="background:#00ccff"></div>
+          <div class="accent-opt" data-color="#39ff14" style="background:#39ff14"></div>
+          <div class="accent-opt" data-color="#ff6fff" style="background:#ff6fff"></div>
+          <div class="accent-opt" data-color="#ffcc00" style="background:#ffcc00"></div>
+        </div>
+      </div>
+      <div class="setting-group">
+        <label>Yazı Tipi Boyutu</label>
+        <div class="range-wrap">
+          <input type="range" id="fontSizeRange" min="13" max="18" value="15" class="custom-range"/>
+          <span id="fontSizeVal">15px</span>
+        </div>
+      </div>
+      <div class="setting-group">
+        <label>AI İsmi</label>
+        <input type="text" id="aiNameInput" class="text-input" value="Glydn AI" placeholder="AI adını girin"/>
+      </div>
+      <div class="setting-group">
+        <label>Mesaj Balon Stili</label>
+        <div class="bubble-options">
+          <div class="bubble-opt active" data-bubble="rounded">⬭ Yuvarlak</div>
+          <div class="bubble-opt" data-bubble="sharp">▬ Keskin</div>
+          <div class="bubble-opt" data-bubble="pill">💊 Hap</div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-save" id="saveSettings">Kaydet</button>
+    </div>
+  </div>
+</div>
+
+<!-- DELETE ALL CONFIRM -->
+<div class="modal-overlay" id="confirmModal">
+  <div class="modal modal-sm">
+    <div class="modal-header">
+      <h3>Tüm Sohbetleri Sil</h3>
+      <button class="modal-close" id="confirmClose">✕</button>
+    </div>
+    <div class="modal-body">
+      <p style="color:var(--text-secondary)">Tüm sohbetler kalıcı olarak silinecek. Bu işlem geri alınamaz.</p>
+    </div>
+    <div class="modal-footer" style="gap:10px;display:flex">
+      <button class="btn-cancel" id="confirmCancel">İptal</button>
+      <button class="btn-danger" id="confirmDeleteAll">Evet, Tümünü Sil</button>
+    </div>
+  </div>
+</div>
+
+<!-- TEK SOHBET SİLME ONAYI -->
+<div class="modal-overlay" id="deleteSingleModal">
+  <div class="modal modal-sm">
+    <div class="modal-header">
+      <h3>Sohbeti Sil</h3>
+      <button class="modal-close" id="deleteSingleClose">✕</button>
+    </div>
+    <div class="modal-body">
+      <p style="color:var(--text-secondary)">Bu sohbet kalıcı olarak silinecek. Emin misiniz?</p>
+    </div>
+    <div class="modal-footer" style="gap:10px;display:flex">
+      <button class="btn-cancel" id="deleteSingleCancel">İptal</button>
+      <button class="btn-danger" id="deleteSingleConfirm">Evet, Sil</button>
+    </div>
+  </div>
+</div>
+
+<script src="{{ url_for('static', filename='chat.js') }}"></script>
+</body>
+</html>

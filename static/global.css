@@ -1,0 +1,86 @@
+/* =============================================
+   GLYDN AI — GLOBAL
+   Değişkenler, font, scrollbar, animasyonlar
+   ============================================= */
+
+@import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap');
+
+:root {
+  --primary: #00ff88;
+  --primary-dim: rgba(0, 255, 136, 0.15);
+  --primary-glow: rgba(0, 255, 136, 0.4);
+  --accent: #00ccff;
+  --accent-dim: rgba(0, 204, 255, 0.15);
+  --neon-shadow: 0 0 20px rgba(0, 255, 136, 0.35), 0 0 40px rgba(0, 255, 136, 0.1);
+  --neon-shadow-sm: 0 0 10px rgba(0, 255, 136, 0.3);
+
+  --bg: #0a0e0f;
+  --bg-secondary: #0f1517;
+  --bg-card: #131a1c;
+  --bg-hover: #1a2428;
+  --bg-input: #111819;
+  --darker-bg: #070b0c;
+
+  --border: rgba(0, 255, 136, 0.12);
+  --border-strong: rgba(0, 255, 136, 0.25);
+
+  --text: #e8f5f0;
+  --text-secondary: #7a9990;
+  --text-dim: #4a6660;
+
+  /* Font değişkenleri */
+  --font-ui: 'Plus Jakarta Sans', sans-serif;
+  --font-display: 'Syne', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+
+  --sidebar-width: 280px;
+  --font-size: 15px;
+}
+
+/* Theme variants */
+body[data-theme="darker"] { --bg: #050708; --bg-secondary: #090c0d; --bg-card: #0d1214; }
+body[data-theme="forest"]  { --primary: #39ff14; --primary-glow: rgba(57,255,20,0.4); }
+body[data-theme="ocean"]   { --primary: #00e5ff; --accent: #0066ff; --primary-glow: rgba(0,229,255,0.4); }
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { font-size: var(--font-size); }
+
+body {
+  font-family: var(--font-ui);
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── SCROLLBAR ── */
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-track { background: var(--darker-bg); }
+::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 3px; box-shadow: var(--neon-shadow-sm); }
+::-webkit-scrollbar-thumb:hover { background: #00ff99; }
+
+/* ── ANİMASYONLAR ── */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeIn {
+  from { opacity: 0; } to { opacity: 1; }
+}
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(30px) scale(0.96); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+@keyframes pulse {
+  0%, 100% { filter: drop-shadow(0 0 8px rgba(0,255,136,0.5)); }
+  50%       { filter: drop-shadow(0 0 20px rgba(0,255,136,0.8)); }
+}
+@keyframes bounce {
+  0%, 80%, 100% { transform: scale(0.8); opacity: 0.5; }
+  40%            { transform: scale(1.2); opacity: 1; }
+}
+@keyframes blink {
+  0%, 100% { opacity: 1; } 50% { opacity: 0; }
+}
